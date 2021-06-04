@@ -8,11 +8,11 @@
     <key>CFBundleIconFile</key>
     <string></string>
     <key>CFBundleIdentifier</key>
-    <string>com.OleoLab.MidiSender</string>
+    <string>com.OleoLab.DawInfoSender</string>
     <key>CFBundleName</key>
-    <string>MidiSender</string>
+    <string>DawInfoSender</string>
     <key>CFBundleDisplayName</key>
-    <string>MidiSender</string>
+    <string>DawInfoSender</string>
     <key>CFBundlePackageType</key>
     <string>BNDL</string>
     <key>CFBundleSignature</key>

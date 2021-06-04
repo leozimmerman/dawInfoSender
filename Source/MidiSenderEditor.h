@@ -22,12 +22,12 @@ static juce::Identifier mainId      { "main" };
 
 enum {
     timecodeHeight = 26,
-    midiKeyboardHeight = 70,
+    midiKeyboardHeight = 0,
     oscSectionHeight = 35,
     portSliderWidth = 100,
     maindIdLabelWidth = 100,
     hostLabelWidth = 200,
-    vertMargin = 30
+    vertMargin = 10
 };
 
 class SpinLockedPosInfo {
@@ -70,14 +70,10 @@ class MidiSenderEditor : public AudioProcessorEditor,
                         public juce::Label::Listener
 {
 public:
-    MidiSenderEditor (juce::AudioProcessor& processor, juce::AudioProcessorValueTreeState& vts, MidiKeyboardState& ks)
+    MidiSenderEditor (juce::AudioProcessor& processor, juce::AudioProcessorValueTreeState& vts)
                     : AudioProcessorEditor (processor),
-                     midiKeyboard         (ks, MidiKeyboardComponent::horizontalKeyboard),
                      valueTreeState(vts)
     {
-      
-        addAndMakeVisible (midiKeyboard);
-
         addAndMakeVisible (timecodeDisplayLabel);
         timecodeDisplayLabel.setFont (Font (Font::getDefaultMonospacedFontName(), 15.0f, Font::plain));
 
@@ -137,7 +133,6 @@ public:
         auto r = getLocalBounds(); //.reduced (8);
         
         timecodeDisplayLabel.setBounds (r.removeFromTop (timecodeHeight));
-        midiKeyboard.setBounds (r.removeFromTop (midiKeyboardHeight + timecodeHeight));
         
         int spacing = 10;
         int yPos = getHeight() - oscSectionHeight;
@@ -161,10 +156,6 @@ public:
     void timerCallback() override {
         if (trackInfoProvider == NULL) return;
         updateTimecodeDisplay (trackInfoProvider->getLastPosInfo()->get());
-    }
-
-    void hostMIDIControllerIsAvailable (bool controllerIsAvailable) override {
-        midiKeyboard.setVisible (! controllerIsAvailable);
     }
 
     void updateTrackProperties() {
@@ -206,7 +197,6 @@ public:
     }
 
 private:
-    MidiKeyboardComponent midiKeyboard;
     juce::AudioProcessorValueTreeState& valueTreeState;
     
     Label timecodeDisplayLabel;
