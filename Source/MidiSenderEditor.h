@@ -115,7 +115,7 @@ public:
         lastUIWidth. addListener (this);
         lastUIHeight.addListener (this);
 
-        updateTrackProperties();
+       // updateTrackProperties();
 
         // start a timer which will keep our timecode display updated
         startTimerHz (30);
@@ -182,6 +182,7 @@ public:
     
     void addTrackInfoProvider(TrackInfoProvider* provider) {
         trackInfoProvider = provider;
+        updateTrackProperties();
     }
     
     void updateOscLabelsTexts(bool sendNotification) {

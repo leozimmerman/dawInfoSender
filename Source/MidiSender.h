@@ -147,6 +147,55 @@ public:
     }
 
     //==============================================================================
+    int getBar (double quarterNotes, int numerator, int denominator) {
+        if (numerator == 0 || denominator == 0)
+            return 1;
+        auto quarterNotesPerBar = (numerator * 4 / denominator);
+        auto bar = ((int) quarterNotes) / quarterNotesPerBar + 1;
+        return bar;
+    }
+    
+    int getBeat (double quarterNotes, int numerator, int denominator) {
+        if (numerator == 0 || denominator == 0)
+            return 1;
+
+        auto quarterNotesPerBar = (numerator * 4 / denominator);
+        auto beats  = (fmod (quarterNotes, quarterNotesPerBar) / quarterNotesPerBar) * numerator;
+
+        auto beat  = ((int) beats) + 1;
+        return beat;
+    }
+    
+    int getTicks (double quarterNotes, int numerator, int denominator) {
+        if (numerator == 0 || denominator == 0)
+            return 0;
+
+        auto quarterNotesPerBar = (numerator * 4 / denominator);
+        auto beats  = (fmod (quarterNotes, quarterNotesPerBar) / quarterNotesPerBar) * numerator;
+        auto ticks  = ((int) (fmod (beats, 1.0) * 960.0 + 0.5));
+        return ticks;
+    }
+    
+    int getTicksHalf (double quarterNotes, int numerator, int denominator) {
+        if (numerator == 0 || denominator == 0)
+            return 0;
+
+        auto quarterNotesPerBar = (numerator * 4 / denominator) * (numerator / 2);
+        auto beats  = (fmod (quarterNotes, quarterNotesPerBar) / quarterNotesPerBar) * numerator;
+        auto ticks  = ((int) (fmod (beats, 1.0) * 960.0 + 0.5));
+        return ticks;
+    }
+    
+    int getTicksBar (double quarterNotes, int numerator, int denominator) {
+        if (numerator == 0 || denominator == 0)
+            return 0;
+
+        auto quarterNotesPerBar = (numerator * 4 / denominator) * numerator;
+        auto beats  = (fmod (quarterNotes, quarterNotesPerBar) / quarterNotesPerBar) * numerator;
+        auto ticks  = ((int) (fmod (beats, 1.0) * 960.0 + 0.5));
+        return ticks;
+    }
+    
     void updateTrackProperties (const TrackProperties& properties) override
     {
         {
@@ -194,6 +243,18 @@ private:
         oscManager.sendValue(pos.timeInSeconds, "TIME-IN-SECONDS");
         oscManager.sendValue(pos.isPlaying, "IS-PLAYING");
         oscManager.sendValue(pos.isRecording, "IS-RECORDING");
+        
+        auto bar = getBar(pos.ppqPosition, pos.timeSigNumerator, pos.timeSigDenominator);
+        auto beat = getBeat(pos.ppqPosition, pos.timeSigNumerator, pos.timeSigDenominator);
+        auto ticksBeat = getTicks(pos.ppqPosition, pos.timeSigNumerator, pos.timeSigDenominator);
+        auto ticksHalf =  getTicksHalf(pos.ppqPosition, pos.timeSigNumerator, pos.timeSigDenominator);
+        auto ticksBar =  getTicksBar(pos.ppqPosition, pos.timeSigNumerator, pos.timeSigDenominator);
+        
+        oscManager.sendValue(bar, "BAR");
+        oscManager.sendValue(beat, "BEAT");
+        oscManager.sendValue(ticksBeat, "TICKS-BEAT");
+        oscManager.sendValue(ticksHalf, "TICKS-HALF");
+        oscManager.sendValue(ticksBar, "TICKS-BAR");
     }
 
     CriticalSection trackPropertiesLock;

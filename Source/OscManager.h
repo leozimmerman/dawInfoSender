@@ -1,11 +1,15 @@
 
 #pragma once
 
+#include <JuceHeader.h>
+
 #define DEFAULT_OSC_HOST "127.0.0.1"
 #define DEFAULT_OSC_PORT 9001
 #define DEFAULT_OSC_MAIN_ID "trackId"
 #define MIN_OSC_PORT 1
 #define MAX_OSC_PORT 65535
+
+using namespace juce;
 
 class OscManager {
 public:
